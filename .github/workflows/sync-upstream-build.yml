@@ -84,6 +84,11 @@ jobs:
             echo "should_build=false" >> "$GITHUB_OUTPUT"
           else
             echo "should_build=true" >> "$GITHUB_OUTPUT"
+            # Tag now, while this commit is still the head of main. GITHUB_TOKEN may
+            # not tag a commit whose workflow files differ from main's, so tagging at
+            # publish time fails when a workflow edit lands on main during the build.
+            git tag "$release_tag" "$after"
+            git push origin "$release_tag"
           fi
 
   android:
@@ -584,6 +589,7 @@ jobs:
 
           gh release create "$RELEASE_TAG" release-assets/* \
             --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
             --target "$COMMIT_SHA" \
             --title "PiliPlus $RELEASE_VERSION" \
             --notes-file "$RUNNER_TEMP/release-notes.md"
