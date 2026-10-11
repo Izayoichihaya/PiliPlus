@@ -144,7 +144,7 @@ abstract final class Update {
                   downloadBtn('deb', ext: 'deb'),
                   downloadBtn('targz', ext: 'tar.gz'),
                 ] else
-                  downloadBtn(Platform.isAndroid ? '更新' : 'Github'),
+                  downloadBtn(Platform.isAndroid ? '更新' : '下载'),
               ],
             );
           },
