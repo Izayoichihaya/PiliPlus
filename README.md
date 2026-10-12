@@ -1,7 +1,8 @@
 <div align="center">
     <img width="160" height="160" src="assets/images/logo/logo.png">
-    <h1>PiliPlus（个人分支）</h1>
-    <p>基于 <a href="https://github.com/bggRGjQaUbCoE/PiliPlus">PiliPlus</a> 的哔哩哔哩第三方客户端，自动跟进上游更新。</p>
+    <h1>PiliPlus 海外加速版</h1>
+    <p>内置 <a href="https://github.com/MrTangLuyao/Bilibili-thread-ripper">B站线程撕裂者（BTR）</a>多线程下载的哔哩哔哩第三方客户端，解决海外看 B 站卡顿、加载慢。</p>
+    <p>基于 <a href="https://github.com/bggRGjQaUbCoE/PiliPlus">PiliPlus</a>，自动跟进上游更新。</p>
 </div>
 
 ## 与原版的区别
