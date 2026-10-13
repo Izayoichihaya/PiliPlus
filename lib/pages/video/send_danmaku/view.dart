@@ -11,7 +11,6 @@ import 'package:PiliPlus/pages/common/publish/common_text_pub_page.dart';
 import 'package:PiliPlus/pages/danmaku/danmaku_model.dart';
 import 'package:PiliPlus/pages/setting/slide_color_picker.dart';
 import 'package:PiliPlus/plugin/pl_player/controller.dart';
-import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:canvas_danmaku/models/danmaku_content_item.dart';
 import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
@@ -455,7 +454,7 @@ class _SendDanmakuPanelState extends CommonTextPubPageState<SendDanmakuPanel> {
       }
       widget.onSuccess(
         DanmakuContentItem(
-          ChineseConverter.display(editController.text),
+          editController.text,
           color: isColorful ? Colors.white : _color.value,
           type: switch (_mode.value) {
             5 => DanmakuItemType.top,

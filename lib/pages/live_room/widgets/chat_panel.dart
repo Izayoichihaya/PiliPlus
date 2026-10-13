@@ -12,6 +12,7 @@ import 'package:PiliPlus/pages/live_room/controller.dart';
 import 'package:PiliPlus/pages/live_room/superchat/superchat_card.dart';
 import 'package:PiliPlus/pages/member/widget/medal_widget.dart';
 import 'package:PiliPlus/pages/video/widgets/header_control.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -131,7 +132,9 @@ class LiveRoomChatPanel extends StatelessWidget {
                                     ..onTap = () =>
                                         Get.toNamed('/member?mid=${reply.mid}'),
                                 ),
-                              _buildMsg(devicePixelRatio, item),
+                              ChineseConverter.keepOriginal(
+                                _buildMsg(devicePixelRatio, item),
+                              ),
                             ],
                           ),
                         ),

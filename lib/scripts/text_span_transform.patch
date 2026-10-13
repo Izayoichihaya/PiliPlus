@@ -1,25 +1,56 @@
 diff --git a/packages/flutter/lib/src/painting/text_span.dart b/packages/flutter/lib/src/painting/text_span.dart
-index 09fba7f..30ad5cd 100644
+index 09fba7f..8ffcdee 100644
 --- a/packages/flutter/lib/src/painting/text_span.dart
 +++ b/packages/flutter/lib/src/painting/text_span.dart
-@@ -275,6 +275,11 @@ class TextSpan extends InlineSpan implements HitTestTarget, MouseTrackerAnnotati
+@@ -275,6 +275,16 @@ class TextSpan extends InlineSpan implements HitTestTarget, MouseTrackerAnnotati
      }
    }
  
 +  /// PiliPlus: transforms the text right before it is handed to the engine,
 +  /// e.g. Simplified -> Traditional Chinese conversion. The transform MUST keep
 +  /// the UTF-16 length unchanged, otherwise caret / selection offsets break.
++  ///
++  /// A span with a non-null [locale] declares the language of its own text,
++  /// so it and all of its descendants are left untransformed.
 +  static String Function(String text)? textTransform;
++
++  static int _untransformedDepth = 0;
 +
    /// Apply the [style], [text], and [children] of this object to the
    /// given [ParagraphBuilder], from which a [Paragraph] can be obtained.
    /// [Paragraph] objects can be drawn on [Canvas] objects.
-@@ -295,7 +300,10 @@ class TextSpan extends InlineSpan implements HitTestTarget, MouseTrackerAnnotati
+@@ -289,13 +299,36 @@ class TextSpan extends InlineSpan implements HitTestTarget, MouseTrackerAnnotati
+     List<PlaceholderDimensions>? dimensions,
+   }) {
+     assert(debugAssertIsValid());
++    final bool keepOriginal = locale != null;
++    if (keepOriginal) {
++      _untransformedDepth++;
++    }
++    try {
++      _buildContent(builder, textScaler: textScaler, dimensions: dimensions);
++    } finally {
++      if (keepOriginal) {
++        _untransformedDepth--;
++      }
++    }
++  }
++
++  void _buildContent(
++    ui.ParagraphBuilder builder, {
++    required TextScaler textScaler,
++    required List<PlaceholderDimensions>? dimensions,
++  }) {
+     final hasStyle = style != null;
+     if (hasStyle) {
+       builder.pushStyle(style!.getTextStyle(textScaler: textScaler));
      }
      if (text != null) {
        try {
 -        builder.addText(text!);
-+        final String? transformed = textTransform?.call(text!);
++        final String? transformed = _untransformedDepth == 0
++            ? textTransform?.call(text!)
++            : null;
 +        builder.addText(
 +          transformed != null && transformed.length == text!.length ? transformed : text!,
 +        );

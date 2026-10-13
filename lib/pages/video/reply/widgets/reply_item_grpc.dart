@@ -29,6 +29,7 @@ import 'package:PiliPlus/pages/video/reply/widgets/zan_grpc.dart';
 import 'package:PiliPlus/utils/accounts.dart';
 import 'package:PiliPlus/utils/app_scheme.dart';
 import 'package:PiliPlus/utils/bili_utils.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/color_utils.dart';
 import 'package:PiliPlus/utils/danmaku_utils.dart';
 import 'package:PiliPlus/utils/date_utils.dart';
@@ -361,13 +362,15 @@ class ReplyItemGrpc extends StatelessWidget {
                   ),
                   const TextSpan(text: ' '),
                 ],
-                _buildMessage(
-                  context,
-                  colorScheme,
-                  replyControl.showTranslation
-                      ? replyItem.translatedContent
-                      : replyItem.content,
-                  replyControl,
+                ChineseConverter.keepOriginal(
+                  _buildMessage(
+                    context,
+                    colorScheme,
+                    replyControl.showTranslation
+                        ? replyItem.translatedContent
+                        : replyItem.content,
+                    replyControl,
+                  ),
                 ),
               ],
             ),
@@ -661,11 +664,13 @@ class ReplyItemGrpc extends StatelessWidget {
                                 ? ''
                                 : ' ',
                           ),
-                          _buildMessage(
-                            context,
-                            colorScheme,
-                            childReply.content,
-                            childReply.replyControl,
+                          ChineseConverter.keepOriginal(
+                            _buildMessage(
+                              context,
+                              colorScheme,
+                              childReply.content,
+                              childReply.replyControl,
+                            ),
                           ),
                         ],
                       ),
@@ -1103,7 +1108,9 @@ class ReplyItemGrpc extends StatelessWidget {
                               ),
                               const TextSpan(text: ':\n'),
                             ],
-                            TextSpan(text: message),
+                            ChineseConverter.keepOriginal(
+                              TextSpan(text: message),
+                            ),
                           ],
                         ),
                       ),

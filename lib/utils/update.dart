@@ -228,7 +228,13 @@ abstract final class Update {
       apkFile = File(p.join(updateDirectory.path, 'update.apk'));
 
       SmartDialog.showLoading(msg: '正在下载更新');
-      await Request.dio.download(url, apkFile.path, deleteOnError: true);
+      await Request.dio.download(
+        url,
+        apkFile.path,
+        deleteOnError: true,
+        // 不附带 B 站帐号标头（x-bili-mid 等）到 GitHub
+        options: Options(extra: {'account': const NoAccount()}),
+      );
       if (await apkFile.length() < 4) {
         throw const FormatException('下载的 APK 文件无效');
       }

@@ -151,7 +151,11 @@ class Request {
               ..idleTimeout = const Duration(seconds: 15)
               ..autoUncompress = false
               ..findProxy = ((_) => 'PROXY $systemProxyHost:$systemProxyPort')
-              ..badCertificateCallback = (cert, host, port) => true
+              // 只有用户另外开启「禁用 SSL 证书验证」时才跳过验证，
+              // 开代理本身不应关闭证书检查（否则代理可窃取登录 Cookie）
+              ..badCertificateCallback = Pref.badCertificateCallback
+                  ? (cert, host, port) => true
+                  : null
           : () => HttpClient()
               ..idleTimeout = const Duration(seconds: 15)
               ..autoUncompress = false, // Http2Adapter没有自动解压, 统一行为
@@ -167,7 +171,9 @@ class Request {
                       host: systemProxyHost,
                       port: systemProxyPort,
                     )
-                    ..onBadCertificate = (_) => true
+                    ..onBadCertificate = Pref.badCertificateCallback
+                        ? (_) => true
+                        : null
                 : Pref.badCertificateCallback
                 ? (_, config) => config.onBadCertificate = (_) => true
                 : null,

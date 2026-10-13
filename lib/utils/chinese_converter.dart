@@ -2,7 +2,7 @@ import 'dart:math' show min;
 import 'dart:ui' show Locale;
 
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
-import 'package:flutter/painting.dart' show TextSpan;
+import 'package:flutter/painting.dart' show InlineSpan, TextSpan;
 import 'package:flutter/services.dart' show rootBundle;
 
 /// 显示层的简体 -> 繁体转换（数据来自 OpenCC，见 assets/opencc/LICENSE）。
@@ -23,8 +23,15 @@ abstract final class ChineseConverter {
 
   static bool get isEnabled => TextSpan.textTransform != null;
 
-  /// 给不经过 [TextSpan] 、直接用 ParagraphBuilder 画字的地方（例如弹幕）使用。
+  /// 给不经过 [TextSpan] 、直接用 ParagraphBuilder 画字的地方使用。
   static String display(String s) => isEnabled ? convert(s) : s;
+
+  /// 标记一段内容维持原文、不做简繁转换（评论、直播弹幕等用户内容）。
+  /// Flutter 补丁会跳过带 locale 的 TextSpan 及其所有子节点。
+  static TextSpan keepOriginal(InlineSpan child) =>
+      TextSpan(locale: _originalLocale, children: [child]);
+
+  static const _originalLocale = Locale('zh', 'CN');
 
   /// 依据 [locale] 开启或关闭转换：只有繁体（Hant）时开启。
   static Future<void> apply(Locale locale) async {
