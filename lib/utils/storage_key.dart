@@ -138,6 +138,7 @@ abstract final class SettingBoxKey {
       recordSearchHistory = 'recordSearchHistory',
       showPgcTimeline = 'showPgcTimeline',
       pageTransition = 'pageTransition',
+      glyphLocale = 'glyphLocale',
       optTabletNav = 'optTabletNav',
       banWordForDyn = 'banWordForDyn',
       enableLog = 'enableLog',

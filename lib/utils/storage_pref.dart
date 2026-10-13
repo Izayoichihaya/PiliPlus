@@ -9,6 +9,7 @@ import 'package:PiliPlus/models/common/dynamic/dynamic_badge_mode.dart';
 import 'package:PiliPlus/models/common/dynamic/dynamics_type.dart';
 import 'package:PiliPlus/models/common/dynamic/up_panel_position.dart';
 import 'package:PiliPlus/models/common/follow_order_type.dart';
+import 'package:PiliPlus/models/common/glyph_locale_type.dart';
 import 'package:PiliPlus/models/common/member/tab_type.dart';
 import 'package:PiliPlus/models/common/mine_tab_type.dart';
 import 'package:PiliPlus/models/common/msg/msg_unread_type.dart';
@@ -792,6 +793,15 @@ abstract final class Pref {
 
   static bool get enableMYBar =>
       _setting.get(SettingBoxKey.enableMYBar, defaultValue: true);
+
+  static GlyphLocaleType get glyphLocale =>
+      GlyphLocaleType.values.elementAtOrNull(
+        _setting.get(
+          SettingBoxKey.glyphLocale,
+          defaultValue: GlyphLocaleType.system.index,
+        ),
+      ) ??
+      GlyphLocaleType.system;
 
   static Transition get pageTransition =>
       Transition.values[_setting.get(

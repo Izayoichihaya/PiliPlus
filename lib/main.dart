@@ -9,6 +9,7 @@ import 'package:PiliPlus/common/widgets/route_aware_mixin.dart';
 import 'package:PiliPlus/common/widgets/scale_app.dart';
 import 'package:PiliPlus/common/widgets/scroll_behavior.dart';
 import 'package:PiliPlus/http/init.dart';
+import 'package:PiliPlus/models/common/glyph_locale_type.dart';
 import 'package:PiliPlus/models/common/theme/theme_color_type.dart';
 import 'package:PiliPlus/plugin/pl_player/utils/fullscreen.dart';
 import 'package:PiliPlus/router/app_pages.dart';
@@ -271,6 +272,15 @@ class _AndroidActivityObserver extends WidgetsBindingObserver {
       _applyAndroidActivitySettings();
     }
   }
+
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    // 跟随系统时，系统语言改变后立即切换字形，无需重启
+    if (Pref.glyphLocale == GlyphLocaleType.system) {
+      final locale = GlyphLocaleType.system.locale;
+      if (Get.locale != locale) unawaited(Get.updateLocale(locale));
+    }
+  }
 }
 
 KeyEventResult _onKeyEvent(KeyEvent event) {
@@ -346,9 +356,9 @@ class MyApp extends StatelessWidget {
       darkTheme: dark,
       themeMode: ThemeUtils.themeMode = Pref.themeMode,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      locale: const Locale("zh", "CN"),
-      fallbackLocale: const Locale("zh", "CN"),
-      supportedLocales: const [Locale("zh", "CN"), Locale("en", "US")],
+      locale: Pref.glyphLocale.locale,
+      fallbackLocale: GlyphLocaleType.hansLocale,
+      supportedLocales: GlyphLocaleType.supportedLocales,
       initialRoute: '/',
       getPages: Routes.getPages,
       defaultTransition: Pref.pageTransition,

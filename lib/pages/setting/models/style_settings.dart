@@ -12,6 +12,7 @@ import 'package:PiliPlus/common/widgets/stateful_builder.dart';
 import 'package:PiliPlus/models/common/bar_hide_type.dart';
 import 'package:PiliPlus/models/common/dynamic/dynamic_badge_mode.dart';
 import 'package:PiliPlus/models/common/dynamic/up_panel_position.dart';
+import 'package:PiliPlus/models/common/glyph_locale_type.dart';
 import 'package:PiliPlus/models/common/home_tab_type.dart';
 import 'package:PiliPlus/models/common/mine_tab_type.dart';
 import 'package:PiliPlus/models/common/msg/msg_unread_type.dart';
@@ -85,6 +86,20 @@ List<SettingsModel> get styleSettings => [
     subtitle: '点击设置',
     leading: const Icon(Icons.text_fields),
     onTap: (context, setState) => Get.toNamed('/fontSetting'),
+  ),
+  NormalModel(
+    title: '汉字字形（地区）',
+    leading: const Icon(Icons.translate),
+    getSubtitle: () {
+      final type = Pref.glyphLocale;
+      if (type != GlyphLocaleType.system) return '当前：${type.label}';
+      final current = GlyphLocaleType.values.firstWhere(
+        (e) => e != GlyphLocaleType.system && e.locale == type.locale,
+        orElse: () => GlyphLocaleType.hans,
+      );
+      return '当前：跟随系统（${current.label}）';
+    },
+    onTap: _showGlyphLocaleDialog,
   ),
   NormalModel(
     title: '界面缩放',
@@ -646,6 +661,25 @@ Future<void> _showTransitionDialog(
   if (res != null) {
     Get.rootController.defaultTransition = res;
     await GStorage.setting.put(SettingBoxKey.pageTransition, res.index);
+    setState();
+  }
+}
+
+Future<void> _showGlyphLocaleDialog(
+  BuildContext context,
+  VoidCallback setState,
+) async {
+  final res = await showDialog<GlyphLocaleType>(
+    context: context,
+    builder: (context) => SelectDialog<GlyphLocaleType>(
+      title: '汉字字形（地区）',
+      value: Pref.glyphLocale,
+      values: GlyphLocaleType.values.map((e) => (e, e.label)).toList(),
+    ),
+  );
+  if (res != null) {
+    await GStorage.setting.put(SettingBoxKey.glyphLocale, res.index);
+    await Get.updateLocale(res.locale);
     setState();
   }
 }
