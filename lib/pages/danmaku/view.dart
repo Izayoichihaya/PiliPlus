@@ -6,6 +6,7 @@ import 'package:PiliPlus/pages/danmaku/danmaku_model.dart';
 import 'package:PiliPlus/plugin/pl_player/controller.dart';
 import 'package:PiliPlus/plugin/pl_player/models/play_status.dart';
 import 'package:PiliPlus/plugin/pl_player/utils/danmaku_options.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/danmaku_utils.dart';
 import 'package:canvas_danmaku/canvas_danmaku.dart';
 import 'package:get/get.dart';
@@ -136,7 +137,7 @@ class _PlDanmakuState extends State<PlDanmaku> {
         } else {
           _controller!.addDanmaku(
             DanmakuContentItem(
-              e.content,
+              ChineseConverter.display(e.content),
               color: blockColorful
                   ? Colors.white
                   : DmUtils.decimalToColor(e.color),

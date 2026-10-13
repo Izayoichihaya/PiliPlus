@@ -1,11 +1,14 @@
 import 'dart:ui' show Locale, PlatformDispatcher;
 
+import 'package:PiliPlus/utils/chinese_converter.dart';
+import 'package:get/get.dart';
+
 /// 决定 App 的语言区域（Locale）。
 ///
-/// Flutter 的 Text / TextField 会以 `Localizations.localeOf(context)`
-/// 作为文字的 locale，Android 再依此从系统字体中挑选同一汉字的
-/// 地区字形（简体 / 繁體台灣 / 繁體香港）。原本 App 写死 zh_CN，
-/// 所以繁体系统上的汉字也会显示成大陆字形；改为跟随系统即可与原版一致。
+/// 繁体（Hant）时：
+/// 1. 由 [ChineseConverter] 把屏幕上显示的文字简转繁（界面、标题、评论、弹幕）；
+/// 2. Flutter 会以 `Localizations.localeOf(context)` 为文字 locale，
+///    Android 依此选用台湾 / 香港字形，而不是写死 zh_CN 时的大陆字形。
 enum GlyphLocaleType {
   system('跟随系统'),
   hans('简体中文（中国大陆）'),
@@ -40,6 +43,12 @@ enum GlyphLocaleType {
     hantTW => hantTWLocale,
     hantHK => hantHKLocale,
   };
+
+  /// 先载入/切换简繁转换，再更新 App 语言（触发全部文字重新排版）。
+  static Future<void> switchTo(Locale locale) async {
+    await ChineseConverter.apply(locale);
+    await Get.updateLocale(locale);
+  }
 
   /// 取系统偏好语言列表中第一个中文语言；没有中文时维持简体。
   static Locale _fromSystem() {

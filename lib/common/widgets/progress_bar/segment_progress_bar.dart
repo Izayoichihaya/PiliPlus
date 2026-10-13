@@ -17,6 +17,7 @@
 
 import 'dart:ui' as ui;
 
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/extension/iterable_ext.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show listEquals;
@@ -208,7 +209,7 @@ class RenderViewPointProgressBar
             ),
           )
           ..pushStyle(.new(color: Colors.white, fontSize: size, height: 1))
-          ..addText(title);
+          ..addText(ChineseConverter.display(title));
     return builder.build()
       ..layout(const ui.ParagraphConstraints(width: double.infinity));
   }

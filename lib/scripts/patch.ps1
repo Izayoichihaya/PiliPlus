@@ -103,6 +103,9 @@ $GeetestIOSPatch = "lib/scripts/geetest_ios.patch"
 
 $DoubleTapGesturePatch = "lib/scripts/double_tap_gesture.patch"
 
+# PiliPlus fork: hook to convert text (Simplified -> Traditional) before layout
+$TextSpanTransformPatch = "lib/scripts/text_span_transform.patch"
+
 if ($platform.ToLower() -eq "ios") {
     git apply $BottomSheetIOSPiliPlusPatch
     if ($LASTEXITCODE -eq 0) {
@@ -137,7 +140,7 @@ $patches = @($ModalBarrierPatch, $TextSelectionPatch, $MouseCursorPatch,
             $ScrollPositionPatch, $ScrollablePatch, $ScrollableGesturePatch,
             $DraggableScrollableSheetPatch, $ScaffoldPatch, $TextPatch,
             $TextPainterPatch, $SliverPatch, $RefreshIndicatorPatch,
-            $DoubleTapGesturePatch)
+            $DoubleTapGesturePatch, $TextSpanTransformPatch)
 
 switch ($platform.ToLower()) {
     "android" {

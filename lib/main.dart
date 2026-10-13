@@ -19,6 +19,7 @@ import 'package:PiliPlus/services/logger.dart';
 import 'package:PiliPlus/services/service_locator.dart';
 import 'package:PiliPlus/utils/cache_manager.dart';
 import 'package:PiliPlus/utils/calc_window_position.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/date_utils.dart';
 import 'package:PiliPlus/utils/device_utils.dart';
 import 'package:PiliPlus/utils/extension/core_palettes_ext.dart';
@@ -116,6 +117,7 @@ void main() async {
     _initTmpPath(),
     CacheManager.ensureInitialized(),
     ?FontUtils.init(),
+    ChineseConverter.apply(Pref.glyphLocale.locale),
   ]);
   Get
     ..lazyPut(AccountService.new)
@@ -275,10 +277,10 @@ class _AndroidActivityObserver extends WidgetsBindingObserver {
 
   @override
   void didChangeLocales(List<Locale>? locales) {
-    // 跟随系统时，系统语言改变后立即切换字形，无需重启
+    // 跟随系统时，系统语言改变后立即切换简繁，无需重启
     if (Pref.glyphLocale == GlyphLocaleType.system) {
       final locale = GlyphLocaleType.system.locale;
-      if (Get.locale != locale) unawaited(Get.updateLocale(locale));
+      if (Get.locale != locale) unawaited(GlyphLocaleType.switchTo(locale));
     }
   }
 }

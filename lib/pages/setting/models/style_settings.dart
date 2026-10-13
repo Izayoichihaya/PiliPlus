@@ -88,7 +88,7 @@ List<SettingsModel> get styleSettings => [
     onTap: (context, setState) => Get.toNamed('/fontSetting'),
   ),
   NormalModel(
-    title: '汉字字形（地区）',
+    title: '界面语言（简/繁）',
     leading: const Icon(Icons.translate),
     getSubtitle: () {
       final type = Pref.glyphLocale;
@@ -672,14 +672,14 @@ Future<void> _showGlyphLocaleDialog(
   final res = await showDialog<GlyphLocaleType>(
     context: context,
     builder: (context) => SelectDialog<GlyphLocaleType>(
-      title: '汉字字形（地区）',
+      title: '界面语言（简/繁）',
       value: Pref.glyphLocale,
       values: GlyphLocaleType.values.map((e) => (e, e.label)).toList(),
     ),
   );
   if (res != null) {
     await GStorage.setting.put(SettingBoxKey.glyphLocale, res.index);
-    await Get.updateLocale(res.locale);
+    await GlyphLocaleType.switchTo(res.locale);
     setState();
   }
 }
