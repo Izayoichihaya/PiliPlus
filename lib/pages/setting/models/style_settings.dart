@@ -382,6 +382,16 @@ List<SettingsModel> get styleSettings => [
     onChanged: (value) => Get.find<MainController>().directExitOnBack = value,
   ),
   if (Platform.isAndroid)
+    SwitchModel(
+      title: '按两次返回键退出',
+      subtitle: '开启后在主页按返回键会提示，2秒内再按一次即完全关闭App（含后台播放）；关闭则只回到桌面',
+      leading: const Icon(Icons.power_settings_new_outlined),
+      setKey: SettingBoxKey.doubleBackToExit,
+      defaultVal: false,
+      onChanged: (value) =>
+          Get.find<MainController>().doubleBackToExit = value,
+    ),
+  if (Platform.isAndroid)
     NormalModel(
       onTap: (context, setState) => Get.toNamed('/displayModeSetting'),
       title: '屏幕帧率',

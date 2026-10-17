@@ -23,6 +23,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/storage.dart';
 import 'package:PiliPlus/utils/storage_key.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tray_manager/tray_manager.dart' as tray_manager show Image;
@@ -326,11 +327,42 @@ class _MainAppState extends PopScopeState<MainApp>
       ..setVisible(true);
   }
 
-  @pragma('vm:prefer-inline')
-  static void _onBack() {
-    if (Platform.isAndroid) {
+  DateTime? _lastBackPressed;
+
+  void _onBack() {
+    if (!Platform.isAndroid) return;
+    if (!_mainController.doubleBackToExit) {
       AndroidHelper.back();
+      return;
     }
+    final now = DateTime.now();
+    final last = _lastBackPressed;
+    if (last != null && now.difference(last) < const Duration(seconds: 2)) {
+      _lastBackPressed = null;
+      _exitApp();
+    } else {
+      _lastBackPressed = now;
+      SmartDialog.showToast('再按一次返回键退出');
+    }
+  }
+
+  /// 与「定时关闭」相同：先同步播放进度，再写回设置并结束进程。
+  Future<void> _exitApp() async {
+    try {
+      if (PlPlayerController.instance case final player?) {
+        await player
+            .makeHeartBeat(
+              player.position.value,
+              type: .completed,
+              isManual: true,
+            )
+            ?.timeout(const Duration(seconds: 2));
+      }
+    } catch (_) {}
+    try {
+      await GStorage.compact().timeout(const Duration(seconds: 2));
+    } catch (_) {}
+    DeviceUtils.exitApp();
   }
 
   @override
