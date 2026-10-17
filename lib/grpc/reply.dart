@@ -4,6 +4,7 @@ import 'package:PiliPlus/grpc/bilibili/pagination.pb.dart';
 import 'package:PiliPlus/grpc/grpc_req.dart';
 import 'package:PiliPlus/grpc/url.dart';
 import 'package:PiliPlus/http/loading_state.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/global_data.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:fixnum/fixnum.dart';
@@ -39,7 +40,8 @@ abstract final class ReplyGrpc {
 
   static bool needRemoveGrpc(ReplyInfo reply) {
     return GlobalData().blackMids.contains(reply.mid.toInt()) ||
-        (enableFilter && replyRegExp.hasMatch(reply.content.message)) ||
+        (enableFilter &&
+            ChineseConverter.hasMatch(replyRegExp, reply.content.message)) ||
         (antiGoodsReply && needRemoveGoodGrpc(reply));
   }
 

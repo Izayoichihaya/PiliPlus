@@ -30,6 +30,7 @@ import 'package:PiliPlus/models_new/video/video_relation/data.dart';
 import 'package:PiliPlus/models_new/video/video_shot/data.dart';
 import 'package:PiliPlus/utils/accounts.dart';
 import 'package:PiliPlus/utils/app_sign.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/extension/string_ext.dart';
 import 'package:PiliPlus/utils/global_data.dart';
 import 'package:PiliPlus/utils/id_utils.dart';
@@ -104,7 +105,7 @@ abstract final class VideoHttp {
     }
     if (enableFilter &&
         i['args']?['tname'] != null &&
-        zoneRegExp.hasMatch(i['args']['tname'])) {
+        ChineseConverter.hasMatch(zoneRegExp, i['args']['tname'])) {
       return true;
     }
     return false;
@@ -184,7 +185,9 @@ abstract final class VideoHttp {
     if (RecommendFilter.filterLikeRatio(i['stat']['like'], i['stat']['view'])) {
       return false;
     }
-    if (enableFilter && i['tname'] != null && zoneRegExp.hasMatch(i['tname'])) {
+    if (enableFilter &&
+        i['tname'] != null &&
+        ChineseConverter.hasMatch(zoneRegExp, i['tname'])) {
       return false;
     }
     return true;

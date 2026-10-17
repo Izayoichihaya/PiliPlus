@@ -6,6 +6,7 @@ import 'package:PiliPlus/models/dynamics/article_content_model.dart';
 import 'package:PiliPlus/models/model_avatar.dart';
 import 'package:PiliPlus/models/model_owner.dart';
 import 'package:PiliPlus/models_new/live/live_feed_index/watched_show.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/extension/iterable_ext.dart';
 import 'package:PiliPlus/utils/parse_bool.dart';
 import 'package:PiliPlus/utils/parse_int.dart';
@@ -70,11 +71,11 @@ class DynamicsDataModel {
         }
         if (enableFilter) {
           if (item.orig case final orig?) {
-            if (banWordForDyn.hasMatch(_getMatchText(orig))) {
+            if (ChineseConverter.hasMatch(banWordForDyn, _getMatchText(orig))) {
               continue;
             }
           }
-          if (banWordForDyn.hasMatch(_getMatchText(item))) {
+          if (ChineseConverter.hasMatch(banWordForDyn, _getMatchText(item))) {
             continue;
           }
         }

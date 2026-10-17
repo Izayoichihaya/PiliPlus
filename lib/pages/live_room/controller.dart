@@ -30,6 +30,7 @@ import 'package:PiliPlus/services/service_locator.dart';
 import 'package:PiliPlus/tcp/live.dart';
 import 'package:PiliPlus/utils/accounts.dart';
 import 'package:PiliPlus/utils/android/bindings.g.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/connectivity_utils.dart';
 import 'package:PiliPlus/utils/danmaku_utils.dart';
 import 'package:PiliPlus/utils/duration_utils.dart';
@@ -462,7 +463,8 @@ class LiveRoomController extends GetxController {
   }
 
   bool isBlocked(String text, Object uid) {
-    return _keywordList.any(text.contains) || _shieldUids.contains(uid);
+    return _keywordList.any((i) => ChineseConverter.contains(text, i)) ||
+        _shieldUids.contains(uid);
   }
 
   void startLiveMsg() {

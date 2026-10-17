@@ -5,6 +5,7 @@ import 'package:PiliPlus/pages/common/multi_select/base.dart'
     show BaseMultiSelectMixin;
 import 'package:PiliPlus/pages/common/search/common_search_controller.dart';
 import 'package:PiliPlus/services/download/download_service.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/storage.dart';
 import 'package:flutter/widgets.dart' show Text;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -26,14 +27,15 @@ class DownloadSearchController
 
   @override
   Future<LoadingState<List<BiliDownloadEntryInfo>>> customGetData() async {
-    final text = editController.text.toLowerCase();
+    final text = editController.text;
     return Success(
       _downloadService.downloadList
           .where(
             (e) =>
-                e.title.toLowerCase().contains(text) ||
-                e.showTitle.toLowerCase().contains(text) ||
-                (e.ownerName?.toLowerCase().contains(text) ?? false),
+                ChineseConverter.contains(e.title, text) ||
+                ChineseConverter.contains(e.showTitle, text) ||
+                (e.ownerName != null &&
+                    ChineseConverter.contains(e.ownerName!, text)),
           )
           .toList(),
     );

@@ -1,5 +1,6 @@
 import 'package:PiliPlus/grpc/bilibili/community/service/dm/v1.pb.dart';
 import 'package:PiliPlus/models/user/danmaku_block.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 
 class RuleFilter {
   static final _regExp = RegExp(r'^/(.*)/$');
@@ -36,7 +37,9 @@ class RuleFilter {
 
   bool remove(DanmakuElem elem) {
     return dmUid.contains(elem.midHash) ||
-        dmFilterString.any((i) => elem.content.contains(i)) ||
-        dmRegExp.any((i) => i.hasMatch(elem.content));
+        dmFilterString.any(
+          (i) => ChineseConverter.contains(elem.content, i),
+        ) ||
+        dmRegExp.any((i) => ChineseConverter.hasMatch(i, elem.content));
   }
 }

@@ -117,7 +117,9 @@ void main() async {
     _initTmpPath(),
     CacheManager.ensureInitialized(),
     ?FontUtils.init(),
-    ChineseConverter.apply(Pref.glyphLocale.locale),
+    ChineseConverter.init().then(
+      (_) => ChineseConverter.apply(Pref.glyphLocale.locale),
+    ),
   ]);
   Get
     ..lazyPut(AccountService.new)

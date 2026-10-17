@@ -1,4 +1,5 @@
 import 'package:PiliPlus/models/model_video.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 
 abstract final class RecommendFilter {
@@ -35,7 +36,7 @@ abstract final class RecommendFilter {
 
   /// hot/rank/[filterWithExempt]
   static bool filterTitle(String title) {
-    return (enableFilter && rcmdRegExp.hasMatch(title));
+    return (enableFilter && ChineseConverter.hasMatch(rcmdRegExp, title));
   }
 
   /// [filterAll]

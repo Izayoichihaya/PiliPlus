@@ -10,6 +10,7 @@ import 'package:PiliPlus/pages/setting/models/privacy_settings.dart';
 import 'package:PiliPlus/pages/setting/models/recommend_settings.dart';
 import 'package:PiliPlus/pages/setting/models/style_settings.dart';
 import 'package:PiliPlus/pages/setting/models/video_settings.dart';
+import 'package:PiliPlus/utils/chinese_converter.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/waterfall.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -41,13 +42,15 @@ class _SettingsSearchPageState
     if (value.isEmpty) {
       _list.clear();
     } else {
-      value = value.toLowerCase();
       _list.value = _settings
-          .where(
-            (item) =>
-                item.effectiveTitle.toLowerCase().contains(value) ||
-                item.effectiveSubtitle?.toLowerCase().contains(value) == true,
-          )
+          .where((item) {
+            if (ChineseConverter.contains(item.effectiveTitle, value)) {
+              return true;
+            }
+            final subtitle = item.effectiveSubtitle;
+            return subtitle != null &&
+                ChineseConverter.contains(subtitle, value);
+          })
           .toList();
     }
   }
